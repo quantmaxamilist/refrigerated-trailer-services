@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import StockList from '../../components/StockList.astro';
+import EnquiryBand from '../../components/EnquiryBand.astro';
+import { C, makes } from '../../data/site';
+import { usedStock } from '../../data/stock';
+export function getStaticPaths() { return makes.map((m) => ({ params: { make: m.slug }, props: { m } })); }
+const { m } = Astro.props;
+const items = usedStock.filter((t) => t.makeSlug === m.slug);
+const crumbs = [{ name: 'Used Trailers', path: '/used-trailers' }, { name: `${m.name} Trailers`, path: `/used-trailers/${m.slug}` }];
+const title = `Used ${m.name} Refrigerated Trailers for Sale UK, RTS UK`;
+const desc = `Browse used ${m.name} refrigerated trailers at Refrigerated Trailer Services. ${C.usedTrailers.intro}`;
+---
+<Base title={title} desc={desc} crumbs={crumbs}>
+  <PageHero title={`Used ${m.name} Trailers`} lede={C.usedTrailers.intro} img="aerial-field" crumbs={crumbs} />
+  <section class="sec"><div class="wrap"><StockList items={items} filters={false} makeLinks current={m.slug} /></div></section>
+  <EnquiryBand />
+</Base>

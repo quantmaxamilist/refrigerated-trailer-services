@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { C } from '../data/site';
+const T = C.terms; const crumbs = [{ name: 'Terms', path: '/terms' }];
+const isHead = (t: string) => t.length < 64 && !/[.:;,]$/.test(t) && !/\d|@|www\./.test(t) && /^[A-Z]/.test(t);
+---
+<Base title={T.title} desc={T.desc} crumbs={crumbs}>
+  <PageHero title="Terms and Conditions" crumbs={crumbs} />
+  <section class="sec"><div class="wrap narrow legal">
+    {T.blocks.slice(1).map((b) => (isHead(b.t) ? <h2>{b.t}</h2> : <p>{b.t}</p>))}
+  </div></section>
+</Base>

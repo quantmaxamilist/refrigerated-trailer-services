@@ -1,0 +1,85 @@
+---
+import TrailerCard from './TrailerCard.astro';
+import type { Trailer } from '../data/stock';
+import { makes, C } from '../data/site';
+interface Props { items: Trailer[]; filters?: boolean; makeLinks?: boolean; current?: string }
+const { items, filters = true, makeLinks = false, current } = Astro.props;
+const present = makes.filter((m) => items.some((t) => t.makeSlug === m.slug));
+const hasNew = items.some((t) => t.isNew) && items.some((t) => !t.isNew);
+const temps = ['Mono', 'Multi'];
+---
+<div class="sl" data-stocklist>
+  {filters && items.length > 1 && (
+    <div class="bar" role="group" aria-label="Filter trailers">
+      {hasNew && (
+        <div class="grp"><span class="lbl">Condition</span>
+          <button type="button" data-f="new" data-v="" aria-pressed="true">All</button>
+          <button type="button" data-f="new" data-v="1" aria-pressed="false">New</button>
+          <button type="button" data-f="new" data-v="0" aria-pressed="false">Used</button>
+        </div>
+      )}
+      {present.length > 1 && (
+        <div class="grp"><span class="lbl">Manufacturer</span>
+          <button type="button" data-f="make" data-v="" aria-pressed="true">All</button>
+          {present.map((m) => <button type="button" data-f="make" data-v={m.slug} aria-pressed="false">{m.name}</button>)}
+        </div>
+      )}
+      <div class="grp"><span class="lbl">Temperature</span>
+        <button type="button" data-f="temp" data-v="" aria-pressed="true">All</button>
+        {temps.map((t) => <button type="button" data-f="temp" data-v={t} aria-pressed="false">{t}</button>)}
+      </div>
+    </div>
+  )}
+  {makeLinks && (
+    <ul class="makes">{makes.map((m) => <li><a href={`/used-trailers/${m.slug}`} aria-current={current === m.slug ? 'page' : undefined}>{m.name} Trailers</a></li>)}<li><a href="/used-trailers" aria-current={!current ? 'page' : undefined}>All Trailers</a></li></ul>
+  )}
+  <p class="count mono" data-count aria-live="polite">{items.length} Results Found</p>
+  {items.length > 0 ? (
+    <div class="stock-grid">{items.map((t, i) => <TrailerCard t={t} eager={i < 3} />)}</div>
+  ) : null}
+  <div class="none" data-none hidden={items.length > 0}>
+    <p class="statement">{C.home.oneStop[3]}</p>
+    <div class="btns"><a class="btn" href="/contact?package=used%20trailers">Contact Us</a><a class="btn btn--ghost" href="/showroom">View Our Showroom</a></div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-stocklist]').forEach((root) => {
+    const cards = Array.from(root.querySelectorAll<HTMLElement>('[data-card]'));
+    const btns = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-f]'));
+    const count = root.querySelector<HTMLElement>('[data-count]')!;
+    const none = root.querySelector<HTMLElement>('[data-none]')!;
+    const state: Record<string, string> = { new: '', make: '', temp: '' };
+    const apply = () => {
+      let n = 0;
+      cards.forEach((c) => {
+        const show = (!state.new || c.dataset.new === state.new) && (!state.make || c.dataset.make === state.make) && (!state.temp || (c.dataset.temp || '').includes(state.temp));
+        c.hidden = !show; if (show) n++;
+      });
+      count.textContent = `${n} Results Found`;
+      none.hidden = n > 0;
+      btns.forEach((b) => b.setAttribute('aria-pressed', String(state[b.dataset.f!] === b.dataset.v)));
+    };
+    btns.forEach((b) => b.addEventListener('click', () => { state[b.dataset.f!] = b.dataset.v!; apply(); }));
+    const q = new URLSearchParams(location.search);
+    for (const k of Object.keys(state)) if (q.get(k)) state[k] = q.get(k)!;
+    if (cards.length) apply();
+  });
+</script>
+
+<style>
+  .bar { display: flex; flex-wrap: wrap; gap: 14px 34px; padding: 18px 0 22px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); margin-bottom: 18px; }
+  .grp { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .lbl { font-size: var(--fs-tiny); font-weight: 700; color: var(--mute); margin-right: 6px; }
+  .bar button { min-height: 40px; padding: 0 14px; border: 0; border-radius: var(--r); background: transparent; box-shadow: inset 0 0 0 1.5px var(--line); font-weight: 700; font-size: 0.9375rem; color: var(--ink); transition: background-color 0.2s, color 0.2s, box-shadow 0.2s; }
+  .bar button:hover { box-shadow: inset 0 0 0 1.5px var(--navy); }
+  .bar button[aria-pressed='true'] { background: var(--navy); color: #fff; box-shadow: none; }
+  .makes { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+  .makes a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: var(--r); box-shadow: inset 0 0 0 1.5px var(--line); font-weight: 700; font-size: 0.9375rem; color: var(--ink); }
+  .makes a:hover { box-shadow: inset 0 0 0 1.5px var(--navy); }
+  .makes a[aria-current] { background: var(--navy); color: #fff; box-shadow: none; }
+  .count { color: var(--mute); margin-bottom: 18px; }
+  .none { padding: clamp(28px, 4vw, 56px); background: var(--ice); border-radius: var(--r); display: grid; gap: 22px; }
+  .none .statement { max-width: 40ch; }
+  .sl :global([data-card][hidden]) { display: none; }
+</style>

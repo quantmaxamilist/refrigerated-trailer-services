@@ -1,0 +1,69 @@
+---
+import Icon from './Icon.astro';
+import { C } from '../data/site';
+---
+<section class="fleet" data-fleet>
+  <div class="stage" data-stage>
+    <picture>
+      <source media="(max-width: 800px)" srcset="/img/fleet-poster-sq.webp" width="900" height="900" />
+      <img class="poster" src="/img/fleet-poster.webp" width="1600" height="900" alt="A long line of white refrigerated trailers" loading="lazy" decoding="async" />
+    </picture>
+    <canvas aria-hidden="true"></canvas>
+    <span class="lab" data-label="a"><span class="plate plate--cyan"><span>One trailer</span></span></span>
+    <span class="lab" data-label="b"><span class="plate plate--cyan"><span>Fleets in excess of 300</span></span></span>
+    <button class="replay" type="button" data-replay hidden><Icon name="replay" size={18} />Replay</button>
+  </div>
+  <div class="wrap copy">
+    <h2 class="statement">{C.home.intro[1]}</h2>
+    <p>{C.sell.intro[0]}</p>
+    <p class="big">{C.home.oneStop[4]}</p>
+    <div class="btns">
+      <a class="btn btn--cyan" href="/sell-your-trailer">Sell your trailer</a>
+      <a class="btn btn--ghost-d" href="/used-trailers">Used trailers</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  const el = document.querySelector<HTMLElement>('[data-fleet]');
+  if (el) {
+    let booted = false;
+    const boot = () => { if (booted) return; booted = true; import('../scripts/fleet').then((m) => m.initFleet(el)); };
+    // fetch the 3D code in idle time, well before the section arrives
+    const io = new IntersectionObserver((es) => { if (es[0].isIntersecting) { boot(); io.disconnect(); } }, { rootMargin: '150% 0px' });
+    io.observe(el);
+    ((window as any).requestIdleCallback || ((f: () => void) => setTimeout(f, 2500)))(() => boot(), { timeout: 4000 });
+  }
+</script>
+
+<style>
+  .fleet { position: relative; background: var(--stage); color: rgba(255, 255, 255, 0.8); overflow: hidden; isolation: isolate; min-height: clamp(640px, 92vh, 940px); display: grid; align-items: start; }
+  .stage { position: absolute; inset: 0; z-index: -1; }
+  .stage canvas, .poster { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .poster { object-fit: cover; }
+  .stage canvas { opacity: 0; transition: opacity 0.4s; }
+  .is-live .stage canvas { opacity: 1; }
+  .is-live .poster { visibility: hidden; }
+  /* the copy side stays dark; the picture is composed for the space to the right of --x0 (set by the script, 44% for the still) */
+  .stage::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(9, 14, 43, 0.78) 0, rgba(9, 14, 43, 0.6) calc(var(--x0, 44%) * 0.55), rgba(9, 14, 43, 0) calc(var(--x0, 44%) + 70px)); pointer-events: none; }
+  .copy { padding-top: clamp(64px, 8vw, 120px); padding-bottom: clamp(64px, 8vw, 120px); display: grid; gap: 22px; }
+  .copy > * { max-width: 31rem; }
+  .statement { color: #fff; }
+  .big { font: 800 var(--fs-display-3)/1.05 var(--f-display); letter-spacing: -0.025em; color: var(--cyan); }
+  .lab { position: absolute; z-index: 2; transform: translate(-50%, -100%); opacity: 0; transition: opacity 0.5s 0.1s; white-space: nowrap; pointer-events: none; }
+  .lab::after { content: ''; position: absolute; left: calc(50% + var(--px, 0px)); top: 100%; width: 2px; height: 22px; background: var(--cyan); }
+  .is-done .lab, .is-static .lab { opacity: 1; }
+  /* the still: label positions measured from the same final frame */
+  .is-static .lab[data-label='a'] { left: 62.4%; top: 73.4%; }
+  .is-static .lab[data-label='b'] { left: auto; right: 14px; top: max(60px, 9.2%); transform: translateY(-100%); }
+  .replay { position: absolute; z-index: 2; right: var(--gut); bottom: 24px; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border: 0; border-radius: var(--r); background: rgba(255, 255, 255, 0.12); color: #fff; font-weight: 700; font-size: 0.9375rem; }
+  .replay:hover { background: rgba(255, 255, 255, 0.22); }
+  @media (max-width: 800px) {
+    .fleet { min-height: 0; display: block; }
+    .stage { position: relative; aspect-ratio: 1 / 1; max-height: 82svh; z-index: 0; }
+    .stage::after { background: linear-gradient(180deg, rgba(9, 14, 43, 0) 60%, var(--stage) 100%); }
+    .copy { padding-top: 12px; }
+    .is-static .lab[data-label='a'] { left: 32.4%; }
+    .is-static .lab[data-label='b'] { --px: 52px; }
+  }
+</style>

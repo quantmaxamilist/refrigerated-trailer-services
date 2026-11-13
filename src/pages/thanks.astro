@@ -1,0 +1,9 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { C, contact } from '../data/site';
+---
+<Base title={C.thanks.title} desc={C.thanks.desc} noindex>
+  <PageHero title={C.thanks.h1} />
+  <section class="sec"><div class="wrap"><div class="btns"><a class="btn" href="/showroom">View Our Showroom</a><a class="btn btn--ghost" href={contact.phoneHref}>{contact.phone}</a></div></div></section>
+</Base>

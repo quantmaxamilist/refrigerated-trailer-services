@@ -1,0 +1,20 @@
+---
+// A small hand-drawn line set for this site only.
+interface Props { name: string; size?: number }
+const { name, size = 20 } = Astro.props;
+const p: Record<string, string> = {
+  phone: 'M5 3.5h3.2l1.6 4.1-2 1.5a12.5 12.5 0 0 0 7.1 7.1l1.5-2 4.1 1.6V19a1.6 1.6 0 0 1-1.7 1.6C10.6 20 4 13.4 3.4 5.2A1.6 1.6 0 0 1 5 3.5Z',
+  mail: 'M3 6.5h18v11H3zM3.5 7l8.5 6.2L20.5 7',
+  pin: 'M12 21s6.5-6 6.5-11.2A6.5 6.5 0 0 0 5.5 9.8C5.5 15 12 21 12 21Zm0-8.8a2.4 2.4 0 1 0 0-4.8 2.4 2.4 0 0 0 0 4.8Z',
+  clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-13.5V12l3.2 2',
+  go: 'M4 12h15M13.5 6.5 19 12l-5.5 5.5',
+  menu: 'M3.5 7h17M3.5 12h17M3.5 17h17',
+  close: 'M5.5 5.5l13 13M18.5 5.5l-13 13',
+  replay: 'M4.5 12a7.5 7.5 0 1 0 2.4-5.5M4.5 4v4.2h4.2',
+  expand: 'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5',
+  prev: 'M14.5 5.5 8 12l6.5 6.5',
+  next: 'M9.5 5.5 16 12l-6.5 6.5',
+  wa: 'M12 3.5a8.5 8.5 0 0 0-7.3 12.8L3.5 20.5l4.3-1.1A8.5 8.5 0 1 0 12 3.5ZM9 8.4c0 3.7 2.9 6.6 6.6 6.6l1-1.6-2-1-.8.9a4.6 4.6 0 0 1-2.6-2.6l.9-.8-1-2Z',
+};
+---
+<svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={p[name]} /></svg>

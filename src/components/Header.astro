@@ -1,0 +1,61 @@
+---
+import Icon from './Icon.astro';
+import { nav, contact, brand } from '../data/site';
+const here = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+---
+<header class="hdr">
+  <div class="wrap hdr-in">
+    <a class="logo" href="/" aria-label={`${brand.legal} home`}><img src="/img/brand/rts-logo.png" width="576" height="180" alt={brand.legal} /></a>
+    <nav class="nav" aria-label="Main">
+      {nav.map((n) => <a href={n.href} aria-current={here === n.href || here.startsWith(n.href + '/') ? 'page' : undefined}>{n.label}</a>)}
+    </nav>
+    <div class="act">
+      <a class="tel" href={contact.phoneHref}><Icon name="phone" size={18} /><span>{contact.phone}</span></a>
+      <a class="btn btn--sm btn--cyan cta" href="/contact">Enquire</a>
+      <button class="burger" type="button" aria-expanded="false" aria-controls="menu" data-burger><Icon name="menu" size={24} /><span class="sr">Menu</span></button>
+    </div>
+  </div>
+</header>
+<div class="menu" id="menu" hidden data-menu>
+  <nav class="wrap menu-in" aria-label="Menu">
+    <ul>
+      <li><a href="/showroom">Showroom</a></li>
+      {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+    <div class="menu-contact">
+      <a class="btn btn--cyan" href={contact.phoneHref}><Icon name="phone" />{contact.phone}</a>
+      <a class="btn btn--wa" href={contact.whatsapp}><Icon name="wa" />WhatsApp</a>
+    </div>
+  </nav>
+</div>
+
+<style>
+  .hdr { position: fixed; inset: 0 0 auto 0; z-index: var(--z-hdr); height: var(--hdr); background: var(--paper); border-bottom: 1px solid var(--line); }
+  .hdr-in { height: 100%; display: flex; align-items: center; gap: clamp(16px, 2vw, 36px); }
+  .logo { flex: none; }
+  .logo img { width: auto; height: 50px; }
+  .nav { display: flex; gap: clamp(12px, 1.5vw, 26px); margin-left: auto; }
+  .nav a { font-weight: 700; font-size: 0.9375rem; color: var(--ink); padding: 8px 0; position: relative; white-space: nowrap; }
+  .nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 2px; height: 3px; background: var(--cyan); border-radius: 2px; transform: scaleX(0); transform-origin: left; transition: transform 0.25s var(--ease); }
+  .nav a:hover::after, .nav a[aria-current]::after { transform: scaleX(1); }
+  .act { display: flex; align-items: center; gap: 14px; flex: none; }
+  .tel { display: inline-flex; align-items: center; gap: 8px; font: 700 0.9375rem/1 var(--f-mono); color: var(--navy); white-space: nowrap; }
+  .burger { display: none; width: 46px; height: 46px; border: 0; background: var(--ice); border-radius: var(--r); align-items: center; justify-content: center; color: var(--ink); }
+  .menu { position: fixed; inset: var(--hdr) 0 0 0; z-index: var(--z-menu); background: var(--stage); overflow: auto; -webkit-overflow-scrolling: touch; }
+  .menu-in { padding-top: 28px; padding-bottom: 40px; display: grid; gap: 28px; }
+  .menu ul { display: grid; }
+  .menu li a { display: block; padding: 13px 0; border-bottom: 1px solid var(--line-d); color: #fff; font: 800 1.5rem/1.1 var(--f-display); letter-spacing: -0.02em; }
+  .menu-contact { display: grid; gap: 12px; }
+  @media (max-width: 1180px) {
+    .nav { display: none; }
+    .act { margin-left: auto; }
+    .burger { display: inline-flex; }
+  }
+  @media (max-width: 560px) {
+    .tel span { display: none; }
+    .tel { width: 46px; height: 46px; justify-content: center; background: var(--ice); border-radius: var(--r); }
+    .cta { display: none; }
+    .logo img { height: 42px; }
+  }
+</style>

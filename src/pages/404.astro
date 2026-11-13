@@ -1,0 +1,9 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { contact } from '../data/site';
+---
+<Base title="Page not found | Refrigerated Trailer Services Limited" desc="That page could not be found." noindex>
+  <PageHero title="Page not found" lede="That page has moved or no longer exists." />
+  <section class="sec"><div class="wrap"><div class="btns"><a class="btn" href="/showroom">View Our Showroom</a><a class="btn btn--ghost" href="/">Home</a><a class="btn btn--ghost" href={contact.phoneHref}>{contact.phone}</a></div></div></section>
+</Base>

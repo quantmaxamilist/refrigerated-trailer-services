@@ -1,0 +1,30 @@
+---
+interface Props { title: string; lede?: string; img?: string; crumbs?: { name: string; path: string }[]; pos?: string }
+const { title, lede, img, crumbs = [], pos = 'center' } = Astro.props;
+---
+<section class:list={['ph', { 'has-img': !!img }]}>
+  {img && <div class="bg"><img src={`/img/${img}.webp`} alt="" style={`object-position:${pos}`} fetchpriority="high" /></div>}
+  <div class="wrap in">
+    {crumbs.length > 0 && (
+      <nav class="crumbs mono" aria-label="Breadcrumb"><a href="/">Home</a>{crumbs.map((c, i) => <><span aria-hidden="true">/</span>{i === crumbs.length - 1 ? <span aria-current="page">{c.name}</span> : <a href={c.path}>{c.name}</a>}</>)}</nav>
+    )}
+    <h1 class="h-2">{title}</h1>
+    {lede && <p class="lede">{lede}</p>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .ph { position: relative; background: var(--stage); color: rgba(255, 255, 255, 0.84); overflow: hidden; isolation: isolate; }
+  .bg { position: absolute; inset: 0 0 0 38%; z-index: -1; }
+  .bg img { width: 100%; height: 100%; object-fit: cover; }
+  .bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, var(--stage) 0%, rgba(9, 14, 43, 0.72) 34%, rgba(9, 14, 43, 0.18) 100%); }
+  .in { padding-top: clamp(44px, 6vw, 88px); padding-bottom: clamp(48px, 6.5vw, 96px); display: grid; gap: 20px; }
+  .has-img .in { min-height: clamp(300px, 34vw, 460px); align-content: end; }
+  h1 { color: #fff; max-width: 17ch; }
+  .lede { color: rgba(255, 255, 255, 0.86); max-width: 56ch; }
+  .crumbs { display: flex; flex-wrap: wrap; gap: 8px; color: rgba(255, 255, 255, 0.62); }
+  .crumbs a:hover { color: #fff; }
+  .crumbs [aria-current] { color: var(--cyan); }
+  @media (max-width: 800px) { .bg { inset: 0; } .bg::after { background: linear-gradient(180deg, rgba(9, 14, 43, 0.62), rgba(9, 14, 43, 0.9)); } }
+</style>

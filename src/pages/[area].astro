@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import TrailerCard from '../components/TrailerCard.astro';
+import EnquiryBand from '../components/EnquiryBand.astro';
+import { C, brand, contact, services } from '../data/site';
+import { stock } from '../data/stock';
+import { oldCities, cityPath, locals, localPath } from '../data/areas';
+export function getStaticPaths() {
+  return [
+    ...oldCities.map((c) => ({ params: { area: cityPath(c).slice(1) }, props: { kind: 'city', name: c } })),
+    ...locals.map((l) => ({ params: { area: localPath(l).slice(1) }, props: { kind: 'local', name: l.name, local: l } })),
+  ];
+}
+const { kind, name, local } = Astro.props as any;
+const L = C.city.lines;
+const isCity = kind === 'city';
+const h1 = isCity ? `${C.city.h1Prefix} ${name}` : `Refrigerated Trailers for Sale in ${name}`;
+const path = isCity ? cityPath(name) : localPath(local);
+// city pages keep the old site's exact title and description; the new local pages get short ones that fit a search result
+const title = isCity ? `${h1} | ${brand.legal} | Rigid Refrigerated Trucks for Sale` : `${h1} | New & Used | RTS`;
+const desc = isCity ? `${h1}. ${C.city.desc}` : `Refrigerated trailers for sale in ${name}: new Lamberet and used fridge trailers from ${brand.name}, ${name === 'Merthyr Tydfil' ? 'Pentrebach' : 'Merthyr Tydfil'}. Call ${contact.phone}.`;
+const crumbs = [{ name: 'Areas', path: '/areas' }, { name, path }];
+const near = isCity ? oldCities.filter((c) => c !== name) : locals.filter((l) => l.slug !== local.slug);
+const picks = stock.slice(0, 6);
+---
+<Base title={title} desc={desc} crumbs={crumbs}>
+  <PageHero title={h1} lede={isCity ? L[2] : local.road} img={isCity ? 'aerial-line' : 'yard-pair'} crumbs={crumbs} />
+  <section class="sec">
+    <div class="wrap grid-2">
+      <div class="prose" data-reveal>
+        {isCity ? (<><h2 class="h-3">{L[1]}</h2><p>{L[3]}</p></>) : (<><h2 class="h-3">{C.home.oneStopH}</h2><p class="lede">{C.about.more[1]}</p><p>{C.home.intro[0]} {C.home.intro[1]} {C.home.intro[2]}</p><p>{L[3]}</p></>)}
+      </div>
+      <div data-reveal="0.08">
+        <h2 class="h-3 why">{isCity ? L[4] : 'Why buy from us?'}</h2>
+        <ul class="ticks">{[L[5], L[6], L[7], L[8], L[9]].map((x) => <li>{x}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+  <section class="sec sec--ice">
+    <div class="wrap">
+      <div class="linehead" data-reveal><h2 class="h-2">Featured Trailers</h2></div>
+      <div class="stock-grid">{picks.map((t) => <TrailerCard t={t} />)}</div>
+      <div class="btns more"><a class="btn" href="/showroom">View Our Showroom</a><a class="btn btn--ghost" href="/sell-your-trailer">Sell Your Trailer</a></div>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="wrap grid-2">
+      <div data-reveal>
+        <h2 class="h-3 why">{isCity ? L[10] : 'What we do'}</h2>
+        {isCity ? <p>{L[11].split('. ')[0]}.</p> : null}
+        <ul class="arealist one">{services.map((s) => <li><a href={s.href}>{s.title}</a></li>)}</ul>
+      </div>
+      <div data-reveal="0.08">
+        <h2 class="h-3 why">{isCity ? 'Other areas' : 'Nearby areas'}</h2>
+        <ul class="arealist">
+          {isCity ? near.map((c: string) => <li><a href={cityPath(c)}>Refrigerated trucks for sale in {c}</a></li>) : near.slice(0, 12).map((l: any) => <li><a href={localPath(l)}>{l.name}</a></li>)}
+          <li><a href="/areas">All areas</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section class="sec sec--stage close">
+    <div class="wrap narrow prose">
+      <h2 class="h-2">{L[27]}</h2>
+      <p class="lede">{L[23]}</p>
+      <p>{L[26].replace('uk , Europe', 'UK, Europe')}</p>
+    </div>
+  </section>
+  <EnquiryBand />
+</Base>
+<style>
+  .why { margin-bottom: 18px; }
+  .more { margin-top: 32px; }
+  .one { grid-template-columns: minmax(0, 1fr); margin-top: 12px; }
+  .close .lede { color: rgba(255, 255, 255, 0.9); }
+</style>

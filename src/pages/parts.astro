@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import { C, contact } from '../data/site';
+const P = C.parts; const crumbs = [{ name: 'Parts', path: '/parts' }];
+const lines = [C.about.offer[8], C.about.solution[7], C.home.intro[2], C.newTrailers.offers[2], C.about.offer[7]];
+---
+<Base title={P.title} desc={P.desc} crumbs={crumbs}>
+  <PageHero title={P.h1} lede={P.desc} img="carrier-yard" crumbs={crumbs} />
+  <section class="sec">
+    <div class="wrap grid-2">
+      <div data-reveal>
+        <ul class="ticks big">{lines.map((l) => <li>{l}</li>)}</ul>
+        <p class="tel">Call <a class="link" href={contact.phoneHref}>{contact.phone}</a> or <a class="link" href={contact.mobileHref}>{contact.mobile}</a></p>
+      </div>
+      <div class="card" data-reveal="0.08"><h2 class="h-3">Parts enquiry</h2><EnquiryForm mode="parts" /></div>
+    </div>
+  </section>
+</Base>
+<style>
+  .big li { font-size: var(--fs-lede); font-weight: 600; color: var(--ink); }
+  .tel { margin-top: 28px; font-weight: 700; }
+  .card h2 { margin-bottom: 18px; }
+</style>

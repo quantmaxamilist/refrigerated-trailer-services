@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+import Reviews from '../components/Reviews.astro';
+import EnquiryBand from '../components/EnquiryBand.astro';
+import { C, brand } from '../data/site';
+const crumbs = [{ name: 'Reviews', path: '/reviews' }];
+---
+<Base title={`${C.reviews.h1} | ${brand.legal}`} desc={`Read and leave Google reviews for ${brand.legal}, the Merthyr Tydfil specialists in new and used refrigerated trailers.`} crumbs={crumbs}>
+  <Reviews heading={C.reviews.h1} level="h1" />
+  <EnquiryBand />
+</Base>

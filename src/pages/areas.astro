@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import EnquiryBand from '../components/EnquiryBand.astro';
+import { C, brand } from '../data/site';
+import { oldCities, cityPath, locals, localPath } from '../data/areas';
+const crumbs = [{ name: 'Areas', path: '/areas' }];
+---
+<Base title={`Areas We Cover | Refrigerated Trailers for Sale in South Wales and the UK | ${brand.short}`} desc={`${C.about.more[1].split('. ')[0]}. Find refrigerated trailers for sale near you, from Merthyr Tydfil and Cardiff to Bristol, Birmingham and Manchester.`} crumbs={crumbs}>
+  <PageHero title="Areas we cover" lede={C.about.more[1].split('. ')[0] + '.'} img="aerial-rows" crumbs={crumbs} />
+  <section class="sec">
+    <div class="wrap">
+      <div class="linehead" data-reveal><h2 class="h-2">South Wales and nearby</h2></div>
+      <ul class="arealist">{locals.map((l) => <li><a href={localPath(l)}>Refrigerated Trailers for Sale in {l.name}</a></li>)}</ul>
+    </div>
+  </section>
+  <section class="sec sec--ice">
+    <div class="wrap">
+      <div class="linehead" data-reveal><h2 class="h-2">Across the UK</h2></div>
+      <p class="lede">{C.city.lines[26].replace('uk , Europe', 'UK, Europe')}</p>
+      <ul class="arealist">{oldCities.map((c) => <li><a href={cityPath(c)}>Refrigerated Trucks for Sale in {c}</a></li>)}</ul>
+    </div>
+  </section>
+  <EnquiryBand />
+</Base>
+<style>.lede { margin-bottom: 24px; max-width: 60ch; }</style>

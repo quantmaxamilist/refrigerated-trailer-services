@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import EnquiryBand from '../components/EnquiryBand.astro';
+import Reviews from '../components/Reviews.astro';
+import { C } from '../data/site';
+const A = C.about; const crumbs = [{ name: 'About Us', path: '/about' }];
+---
+<Base title={A.title} desc={A.desc} crumbs={crumbs}>
+  <PageHero title={A.h1} lede={A.lead[0]} img="aerial-rows" crumbs={crumbs} />
+  <section class="sec">
+    <div class="wrap grid-2">
+      <div class="prose" data-reveal>
+        <p class="lede">{A.lead[1]}</p>
+        <ul class="ticks">{A.solution.map((x) => <li>{x}</li>)}</ul>
+      </div>
+      <div class="prose" data-reveal="0.08">{A.more.map((p) => <p>{p}</p>)}</div>
+    </div>
+  </section>
+  <section class="sec sec--stage">
+    <div class="wrap grid-2">
+      <div data-reveal>
+        <div class="linehead"><h2 class="h-2">{A.offerH}</h2></div>
+        <p class="lang">{A.languages}</p>
+      </div>
+      <ul class="ticks offer" data-reveal="0.08">{A.offer.map((x) => <li>{x}</li>)}</ul>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="wrap grid-2 grid-2--mid">
+      <figure class="photo" data-reveal><img src="/img/aerial-line-960.webp" srcset="/img/aerial-line-960.webp 960w, /img/aerial-line.webp 1920w" sizes="(max-width: 900px) 100vw, 50vw" width="1920" height="1279" alt="A line of refrigerated trailers seen from the air" loading="lazy" /></figure>
+      <div class="prose" data-reveal="0.08"><h2 class="h-3">{C.home.oneStopH}</h2>{C.home.oneStop.map((p) => <p>{p}</p>)}</div>
+    </div>
+  </section>
+  <Reviews />
+  <EnquiryBand />
+</Base>
+<style>
+  .lang { font: 800 var(--fs-statement)/1.2 var(--f-display); color: var(--cyan); letter-spacing: -0.02em; max-width: 18ch; }
+  .offer li { color: #fff; font-size: var(--fs-lede); font-weight: 600; }
+</style>

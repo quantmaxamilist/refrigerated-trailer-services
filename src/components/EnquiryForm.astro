@@ -1,0 +1,114 @@
+---
+import { contact, interests, WEB3FORMS_KEY, C } from '../data/site';
+import { stock } from '../data/stock';
+interface Props { mode?: 'contact' | 'enquiry' | 'px' | 'sell' | 'parts'; id?: string }
+const { mode = 'contact', id = 'enquiry-form' } = Astro.props;
+const subject = { contact: 'General enquiry', enquiry: 'Trailer enquiry', px: 'Part exchange enquiry', sell: 'Trailer for sale to RTS', parts: 'Parts enquiry' }[mode];
+const map = Object.fromEntries(stock.map((s) => [s.id, `${s.ref} - ${s.title}`]));
+const needsTrailer = mode === 'enquiry' || mode === 'px';
+---
+<form class="ef" id={id} action="https://api.web3forms.com/submit" method="POST" data-ef data-key={WEB3FORMS_KEY} data-stock={needsTrailer || mode === 'contact' ? JSON.stringify(map) : undefined}>
+  <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
+  <input type="hidden" name="subject" value={`${subject} from the RTS website`} />
+  <input type="hidden" name="from_name" value="refrigeratedtrailerservices.co.uk" />
+  <input type="checkbox" name="botcheck" class="sr" tabindex="-1" autocomplete="off" />
+  <p class="req">{C.enquiry.note}</p>
+
+  {(needsTrailer || mode === 'contact') && (
+    <label class="f" data-trailer-field hidden={mode === 'contact'}><span>{mode === 'px' ? 'Vehicle Interested In' : 'Trailer Interested In'}{needsTrailer && ' *'}</span><input name="trailer" required={needsTrailer} placeholder="Reference, for example RTS015" /></label>
+  )}
+
+  <div class="row2">
+    <label class="f"><span>Name *</span><input name="name" required autocomplete="name" /></label>
+    <label class="f"><span>Company</span><input name="company" autocomplete="organization" /></label>
+    <label class="f"><span>Telephone Number *</span><input name="phone" type="tel" required autocomplete="tel" /></label>
+    <label class="f"><span>Email Address *</span><input name="email" type="email" required autocomplete="email" /></label>
+  </div>
+
+  {mode === 'contact' && (
+    <fieldset class="ticks-f">
+      <legend>What do you need?</legend>
+      {interests.map((t) => <label><input type="checkbox" name="interested_in[]" value={t} data-pk={t.toLowerCase()} /><span>{t}</span></label>)}
+    </fieldset>
+  )}
+
+  {(mode === 'px' || mode === 'sell') && (
+    <fieldset class="grp">
+      <legend>{mode === 'px' ? 'Your Vehicle Details' : 'Your trailer or fleet'}</legend>
+      <div class="row2">
+        <label class="f"><span>Make *</span><input name="their_make" required /></label>
+        <label class="f"><span>Model *</span><input name="their_model" required /></label>
+        <label class="f"><span>Registration Number{mode === 'px' && ' *'}</span><input name="their_registration" required={mode === 'px'} /></label>
+        <label class="f"><span>Year</span><input name="their_year" inputmode="numeric" /></label>
+        <label class="f"><span>Fridge unit and engine hours</span><input name="their_fridge" /></label>
+        {mode === 'sell' && <label class="f"><span>How many trailers</span><input name="quantity" inputmode="numeric" /></label>}
+      </div>
+      <label class="f"><span>Condition</span><textarea name="their_condition" rows="4"></textarea><small>{C.partExchange.condition}</small></label>
+    </fieldset>
+  )}
+
+  {mode === 'parts' && <label class="f"><span>Part needed, with trailer or fridge make and model *</span><input name="part" required /></label>}
+
+  <label class="f"><span>{mode === 'contact' ? 'Message' : 'Any other information'}</span><textarea name="message" rows="4"></textarea></label>
+  <div class="send">
+    <button class="btn" type="submit">Send</button>
+    <p class="privacy">By sending this form you agree to our <a class="link" href="/privacy">Privacy Policy</a>.</p>
+  </div>
+  {mode === 'px' && <p class="note">{C.partExchange.disclaimer}</p>}
+  <p class="ef-msg" role="status" aria-live="polite"></p>
+</form>
+
+<style>
+  .ef { display: grid; gap: 18px; }
+  .req { font-size: var(--fs-tiny); color: var(--mute); }
+  .row2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+  .f { display: grid; gap: 7px; font-size: 0.875rem; font-weight: 700; color: var(--ink); }
+  .f small { font-weight: 400; color: var(--mute); line-height: 1.45; }
+  .f input, .f textarea { font: 400 1rem/1.4 var(--f-body); color: var(--ink); padding: 14px; border-radius: var(--r); border: 1.5px solid var(--line); background: #fff; width: 100%; transition: border-color 0.2s, box-shadow 0.2s; }
+  .f input:focus, .f textarea:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 4px rgba(40, 52, 144, 0.14); }
+  fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+  legend { font-size: 0.875rem; font-weight: 700; color: var(--ink); margin-bottom: 10px; padding: 0; }
+  .grp { display: grid; gap: 16px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .grp legend { font: 800 1.125rem/1.2 var(--f-display); letter-spacing: -0.015em; float: left; width: 100%; margin-bottom: 2px; }
+  .ticks-f { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .ticks-f legend { grid-column: 1 / -1; float: left; width: 100%; }
+  .ticks-f label { cursor: pointer; position: relative; }
+  .ticks-f input { position: absolute; opacity: 0; pointer-events: none; }
+  .ticks-f span { display: flex; gap: 10px; align-items: center; min-height: 48px; padding: 10px 14px; border-radius: var(--r); border: 1.5px solid var(--line); background: #fff; font-size: 0.9375rem; font-weight: 600; color: var(--ink); transition: border-color 0.2s, background-color 0.2s; }
+  .ticks-f span::before { content: ''; width: 18px; height: 18px; border-radius: 3px; border: 1.5px solid var(--mute); flex: none; }
+  .ticks-f input:checked + span { border-color: var(--navy); background: #eef0fb; }
+  .ticks-f input:checked + span::before { border-color: var(--navy); background: var(--navy) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4.5 9.500l3 3 6-6.500' fill='none' stroke='white' stroke-width='2.200'/%3E%3C/svg%3E") center/16px no-repeat; }
+  .ticks-f input:focus-visible + span { outline: 3px solid var(--cyan); outline-offset: 2px; }
+  .send { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
+  .privacy, .note { font-size: var(--fs-tiny); color: var(--mute); }
+  .ef-msg { font-weight: 700; min-height: 1.3em; }
+  .ef-msg.err { color: #a3241b; }
+  @media (max-width: 640px) { .row2, .ticks-f { grid-template-columns: minmax(0, 1fr); } .send .btn { width: 100%; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-ef]').forEach((form) => {
+    const q = new URLSearchParams(location.search);
+    const stock = JSON.parse(form.dataset.stock || '{}');
+    const tf = form.querySelector<HTMLInputElement>('[name=trailer]');
+    const tid = q.get('trailer');
+    if (tf && tid) { tf.value = stock[tid] || tid; tf.closest<HTMLElement>('[data-trailer-field]')!.hidden = false; }
+    const pk = (q.get('package') || '').toLowerCase();
+    if (pk) form.querySelectorAll<HTMLInputElement>('[data-pk]').forEach((c) => { if (c.dataset.pk === pk) c.checked = true; });
+    const msg = form.querySelector<HTMLElement>('.ef-msg')!;
+    const btn = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.className = 'ef-msg';
+      const fail = 'That did not send. Please call 01685 848841 or email info@refrigeratedtrailerservices.co.uk.';
+      if (!form.dataset.key || form.dataset.key.startsWith('YOUR_')) { msg.classList.add('err'); msg.textContent = 'This form is not connected to an inbox yet. Please call 01685 848841 or email info@refrigeratedtrailerservices.co.uk.'; return; }
+      btn.disabled = true; msg.textContent = 'Sending';
+      try {
+        const r = await fetch(form.action, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form) });
+        const j = await r.json();
+        if (!j.success) throw new Error(j.message);
+        location.href = '/thanks';
+      } catch { msg.classList.add('err'); msg.textContent = fail; btn.disabled = false; }
+    });
+  });
+</script>

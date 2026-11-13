@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import Icon from '../components/Icon.astro';
+import { C, contact, google, brand } from '../data/site';
+const K = C.contact; const crumbs = [{ name: 'Contact', path: '/contact' }];
+---
+<Base title={K.title} desc={K.desc} crumbs={crumbs}>
+  <PageHero title={K.h1} lede={K.intro} crumbs={crumbs} />
+  <section class="sec">
+    <div class="wrap grid-2">
+      <div data-reveal>
+        <dl class="dl-contact">
+          <div><dt>Telephone</dt><dd><a class="big" href={contact.phoneHref}>{contact.phone}</a></dd></div>
+          <div><dt>Mobile</dt><dd><a class="big" href={contact.mobileHref}>{contact.mobile}</a></dd></div>
+          <div><dt>Email</dt><dd><a href={`mailto:${contact.email}`}>{contact.email}</a></dd></div>
+          <div><dt>Address</dt><dd><address>{brand.legal}<br />{contact.address.map((l) => <>{l}<br /></>)}</address></dd></div>
+          <div><dt>Opening Hours</dt><dd>{contact.hours}<br /><span class="closed">Saturday and Sunday closed</span></dd></div>
+        </dl>
+        <div class="btns">
+          <a class="btn btn--wa" href={contact.whatsapp} rel="noopener"><Icon name="wa" />WhatsApp</a>
+          <a class="btn btn--ghost" href={google.directions} rel="noopener" target="_blank"><Icon name="pin" />Get Directions</a>
+        </div>
+        <h2 class="h-4 find">{K.findH}</h2>
+        <p>{K.find}</p>
+        <p><a class="link" href={`https://w3w.co/${contact.w3w}`} rel="noopener">What3Words /// {contact.w3w}</a></p>
+      </div>
+      <div class="card" data-reveal="0.08"><h2 class="h-3">General Enquiries</h2><EnquiryForm mode="contact" /></div>
+    </div>
+  </section>
+</Base>
+<style>
+  address { font-style: normal; font-weight: 600; font-size: 1rem; line-height: 1.6; }
+  .closed { font-weight: 400; color: var(--mute); font-size: 1rem; }
+  .btns { margin: 28px 0 36px; }
+  .find { margin-bottom: 8px; }
+  .find ~ p + p { margin-top: 10px; }
+  .card h2 { margin-bottom: 18px; }
+</style>

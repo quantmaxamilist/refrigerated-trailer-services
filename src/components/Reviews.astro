@@ -1,0 +1,37 @@
+---
+import Icon from './Icon.astro';
+import { google, brand, contact } from '../data/site';
+interface Props { heading?: string; level?: 'h1' | 'h2' }
+const { heading = 'Reviews', level = 'h2' } = Astro.props;
+const H = level;
+---
+<section class="sec sec--ice rv">
+  <div class="wrap grid-2 grid-2--mid">
+    <div data-reveal>
+      <div class="linehead"><H class="h-2">{heading}</H></div>
+      <p class="lede">Reviews for {brand.name} are kept on our Google listing, where every one is written and published by the customer.</p>
+      <div class="btns">
+        <a class="btn" href={google.reviews} rel="noopener" target="_blank">Read our Google reviews</a>
+        <a class="btn btn--ghost" href={google.write} rel="noopener" target="_blank">Leave a review</a>
+      </div>
+    </div>
+    <a class="gcard" href={google.map} rel="noopener" target="_blank" data-reveal="0.08">
+      <span class="pin"><Icon name="pin" size={30} /></span>
+      <div>
+        <p class="nm">{brand.name}</p>
+        <p class="ad">Merthyr Rd, Pentrebach, Merthyr Tydfil CF48 4DR</p>
+        <p class="mono meta"><span>{contact.mobile}</span><span>View on Google Maps</span></p>
+      </div>
+    </a>
+  </div>
+</section>
+
+<style>
+  .lede { max-width: 50ch; margin-bottom: 26px; }
+  .gcard { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center; background: var(--paper); padding: clamp(22px, 3vw, 36px); border-radius: var(--r); box-shadow: 0 0 0 1px var(--line); transition: box-shadow 0.25s; }
+  .gcard:hover { box-shadow: 0 0 0 2px var(--navy); }
+  .pin { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--cyan-soft); color: var(--navy); }
+  .nm { font: 800 1.25rem/1.2 var(--f-display); color: var(--ink); letter-spacing: -0.015em; }
+  .ad { color: var(--text); margin: 6px 0 8px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 2px 18px; color: var(--mute); }
+</style>

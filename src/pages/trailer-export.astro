@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import EnquiryBand from '../components/EnquiryBand.astro';
+import { C } from '../data/site';
+const E = C.exporting; const crumbs = [{ name: 'Trailer Export', path: '/trailer-export' }];
+const title = E.title.replace('shippingRefrigerated', 'shipping | Refrigerated');
+---
+<Base title={title} desc={E.desc} crumbs={crumbs}>
+  <PageHero title={E.h1} lede={E.intro} img="aerial-field" crumbs={crumbs} />
+  <section class="sec">
+    <div class="wrap">
+      <div class="linehead" data-reveal><h2 class="h-2">{E.whyH}</h2></div>
+      <div class="why">{E.why.map(([t, d], i) => <div class="pt" data-reveal={String(0.04 * i)}><h3 class="h-4">{t}</h3><p>{d}</p></div>)}</div>
+    </div>
+  </section>
+  <section class="sec sec--ice">
+    <div class="wrap">
+      <div class="linehead" data-reveal><h2 class="h-2">{E.servicesH}</h2></div>
+      <dl class="defs">{E.services.map(([s, d]) => <div><dt>{s}</dt><dd>{d}</dd></div>)}</dl>
+    </div>
+  </section>
+  <section class="sec sec--stage">
+    <div class="wrap">
+      <div class="linehead" data-reveal><h2 class="h-2">{E.howH}</h2></div>
+      <ol class="steps">{E.how.map(([t, d]) => <li><h3 class="h-4">{t}</h3><span>{d}</span></li>)}</ol>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="wrap grid-2">
+      <div data-reveal><div class="linehead"><h2 class="h-3">{E.destH}</h2></div><ul class="ticks">{E.dest.map((d) => <li>{d}</li>)}</ul></div>
+      <div class="prose" data-reveal="0.08"><h2 class="h-3">{E.moreH}</h2><p>{E.more}</p><div class="btns"><a class="btn" href="/contact?package=trailer%20export">Contact Us</a></div></div>
+    </div>
+  </section>
+  <EnquiryBand package="trailer export" />
+</Base>
+<style>
+  .why { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(18px, 2vw, 32px); }
+  @media (max-width: 1100px) { .why { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 600px) { .why { grid-template-columns: minmax(0, 1fr); } }
+</style>

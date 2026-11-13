@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import StockList from '../components/StockList.astro';
+import EnquiryBand from '../components/EnquiryBand.astro';
+import { C } from '../data/site';
+import { usedStock } from '../data/stock';
+const crumbs = [{ name: 'Used Trailers', path: '/used-trailers' }];
+---
+<Base title={C.usedTrailers.title} desc={C.usedTrailers.desc} crumbs={crumbs}>
+  <PageHero title={C.usedTrailers.h1} lede={C.usedTrailers.intro} img="aerial-field" crumbs={crumbs} />
+  <section class="sec"><div class="wrap"><StockList items={usedStock} makeLinks /></div></section>
+  <EnquiryBand title={C.sell.h2} sub={C.sell.tagline} package="selling a trailer" />
+</Base>

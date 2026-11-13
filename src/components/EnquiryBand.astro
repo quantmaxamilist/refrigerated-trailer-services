@@ -1,0 +1,34 @@
+---
+import Icon from './Icon.astro';
+import { contact, C } from '../data/site';
+interface Props { title?: string; sub?: string; package?: string }
+const { title = 'Contact RTS', sub = C.home.strapSub, package: pk } = Astro.props;
+---
+<section class="band">
+  <div class="wrap in">
+    <div>
+      <h2 class="h-2">{title}</h2>
+      <p class="statement">{sub}</p>
+    </div>
+    <div class="acts">
+      <a class="tel" href={contact.phoneHref}><Icon name="phone" size={30} />{contact.phone}</a>
+      <div class="btns">
+        <a class="btn" href={pk ? `/contact?package=${encodeURIComponent(pk)}` : '/contact'}>Contact Us</a>
+        <a class="btn btn--wa" href={contact.whatsapp}><Icon name="wa" />WhatsApp</a>
+      </div>
+      <p class="mono meta"><span>Mobile {contact.mobile}</span><span>{contact.hours}</span></p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .band { background: var(--cyan); color: var(--stage); padding: clamp(56px, 7vw, 108px) 0; }
+  .in { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 80px); align-items: end; }
+  h2 { color: var(--stage); max-width: 16ch; }
+  .statement { color: var(--stage); margin-top: 18px; max-width: 30ch; font-weight: 600; }
+  .acts { display: grid; gap: 18px; justify-items: start; }
+  .tel { display: inline-flex; align-items: center; gap: 12px; font: 900 clamp(1.75rem, 1rem + 2.6vw, 3.25rem)/1 var(--f-display); letter-spacing: -0.03em; color: var(--stage); }
+  .tel:hover { color: var(--navy); }
+  .meta { display: flex; flex-wrap: wrap; gap: 4px 22px; color: rgba(9, 14, 43, 0.78); }
+  @media (max-width: 900px) { .in { grid-template-columns: minmax(0, 1fr); align-items: start; } }
+</style>

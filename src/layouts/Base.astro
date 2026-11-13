@@ -1,0 +1,99 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
+import { SITE, brand, contact, google, social, brandsStocked, C } from '../data/site';
+
+interface Props { title: string; desc: string; path?: string; image?: string; schema?: object[]; crumbs?: { name: string; path: string }[]; noindex?: boolean; flush?: boolean; enquire?: string }
+const { title, desc, path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/', image = '/og.jpg', schema = [], crumbs = [], noindex = false, flush = false, enquire = '/contact' } = Astro.props;
+const canonical = SITE + (path === '/' ? '/' : path);
+const business = {
+  '@context': 'https://schema.org',
+  '@type': ['AutomotiveBusiness', 'LocalBusiness'],
+  '@id': SITE + '/#business',
+  name: brand.name,
+  legalName: brand.legal,
+  alternateName: [brand.short, 'RTS Refrigerated Trailers', 'RTS Refrigerated Trailer Services'],
+  url: SITE + '/',
+  logo: SITE + '/img/brand/rts-logo.png',
+  image: SITE + '/og.jpg',
+  description: C.home.desc,
+  foundingDate: String(brand.founded),
+  telephone: '+441685848841',
+  email: contact.email,
+  address: { '@type': 'PostalAddress', streetAddress: 'Unit D3 Valleys Enterprise Centre, Merthyr Tydfil Industrial Estate, Pentrebach', addressLocality: 'Merthyr Tydfil', addressRegion: 'Wales', postalCode: 'CF48 4DR', addressCountry: 'GB' },
+  geo: { '@type': 'GeoCoordinates', latitude: contact.geo.lat, longitude: contact.geo.lng },
+  hasMap: google.map,
+  openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '08:00', closes: '18:00' }],
+  areaServed: [{ '@type': 'AdministrativeArea', name: 'South Wales' }, { '@type': 'Country', name: 'United Kingdom' }, { '@type': 'Continent', name: 'Europe' }],
+  brand: brandsStocked.map((b) => ({ '@type': 'Brand', name: b })),
+  knowsLanguage: ['en', 'es', 'nl', 'tr'],
+  knowsAbout: ['Refrigerated trailers', 'Fridge trailers', 'Lamberet trailers', 'Thermo King', 'Carrier Transicold', 'Trailer finance', 'Trailer export'],
+  sameAs: [google.map, social.facebook],
+};
+const site = { '@context': 'https://schema.org', '@type': 'WebSite', '@id': SITE + '/#website', url: SITE + '/', name: brand.name, publisher: { '@id': SITE + '/#business' } };
+const bc = crumbs.length ? [{ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ name: 'Home', path: '/' }, ...crumbs].map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: SITE + (c.path === '/' ? '/' : c.path) })) }] : [];
+const ld = [business, site, ...bc, ...schema];
+---
+<!doctype html>
+<html lang="en-GB" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- page-to-page fade: declared inline and first, so the browser knows about it before anything else runs (in a linked stylesheet Chrome sometimes dropped the transition with a console error) -->
+  <style is:inline>@view-transition{navigation:auto}</style>
+  <title>{title}</title>
+  <meta name="description" content={desc} />
+  <link rel="canonical" href={canonical} />
+  {noindex && <meta name="robots" content="noindex" />}
+  <meta name="theme-color" content="#283490" />
+  <meta name="geo.region" content="GB-MTY" />
+  <meta name="geo.placename" content="Pentrebach, Merthyr Tydfil" />
+  <meta name="geo.position" content={`${contact.geo.lat};${contact.geo.lng}`} />
+  <meta name="ICBM" content={`${contact.geo.lat}, ${contact.geo.lng}`} />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content={brand.name} />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={desc} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={SITE + image} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="sitemap" href="/sitemap.xml" />
+  <script is:inline>document.documentElement.classList.replace('no-js','js');if(matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('reduced');</script>
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <Header />
+  <main id="main" class:list={{ flush }}><slot /></main>
+  <Footer />
+  <div class="dock" data-dock>
+    <a class="btn btn--sm btn--ghost" href={contact.phoneHref}><Icon name="phone" size={18} />{contact.phone}</a>
+    <a class="btn btn--sm btn--cyan" href={enquire} data-dock-enquire>Enquire</a>
+  </div>
+  <script>
+    import { initMotion } from '../scripts/motion';
+    initMotion();
+  </script>
+</body>
+</html>
+
+<style is:global>
+  main { padding-top: var(--hdr); }
+  main.flush { padding-top: 0; }
+  ::view-transition-old(root) { animation-duration: 0.18s; }
+  ::view-transition-new(root) { animation-duration: 0.28s; }
+  /* phones: call and enquire stay within thumb reach once the page has been scrolled */
+  .dock { display: none; }
+  @media (max-width: 760px) {
+    .dock { position: fixed; inset: auto 0 0 0; z-index: var(--z-hdr); display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 8px; padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px)); background: var(--paper); border-top: 1px solid var(--line); transform: translateY(110%); transition: transform 0.3s var(--ease); }
+    .dock .btn { width: 100%; min-height: 46px; padding-inline: 10px; white-space: nowrap; }
+    .scrolled .dock, .no-js .dock { transform: none; }
+    .menu-open .dock, :root:has(.ef :focus) .dock, :root:has(dialog[open]) .dock { transform: translateY(110%); }
+  }
+  @media (prefers-reduced-motion: reduce) { .dock { transition: none; } }
+</style>

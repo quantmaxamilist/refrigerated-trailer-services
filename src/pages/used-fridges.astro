@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import EnquiryBand from '../components/EnquiryBand.astro';
+import { C } from '../data/site';
+const F = C.usedFridges; const crumbs = [{ name: 'Used Fridges', path: '/used-fridges' }];
+---
+<Base title={F.title.replace(' |Refrigerated', ' | Refrigerated')} desc={F.desc.replace(/\s+/g, ' ')} crumbs={crumbs}>
+  <PageHero title={F.h1} lede={F.strap} img="fridge-units" crumbs={crumbs} />
+  <section class="sec">
+    <div class="wrap grid-2">
+      <div class="prose" data-reveal>
+        {F.paras.map((p, i) => <p class={i === 0 ? 'lede' : undefined}>{p}</p>)}
+        <div class="btns"><a class="btn" href="/contact?package=used%20fridges">Contact Us</a></div>
+      </div>
+      <figure class="photo tall" data-reveal="0.08"><img src="/img/fridge-tk.webp" width="768" height="1024" alt="Used Thermo King fridge unit at Refrigerated Trailer Services" loading="lazy" /></figure>
+    </div>
+  </section>
+  <section class="sec sec--ice">
+    <div class="wrap">
+      <div class="linehead" data-reveal><h2 class="h-3">{F.listH}</h2></div>
+      <ul class="units">{F.list.map((u) => <li>{u}</li>)}</ul>
+    </div>
+  </section>
+  <EnquiryBand title="Used Fridges" sub={F.cta} package="used fridges" />
+</Base>
+<style>
+  .tall { aspect-ratio: 4 / 5; max-width: 460px; justify-self: end; width: 100%; }
+  .units { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .units li { background: var(--paper); padding: 22px 20px; border-radius: var(--r); border-left: 4px solid var(--cyan); font: 800 1.125rem/1.25 var(--f-display); color: var(--ink); letter-spacing: -0.01em; }
+  @media (max-width: 800px) { .units { grid-template-columns: minmax(0, 1fr); } .tall { justify-self: start; } }
+</style>

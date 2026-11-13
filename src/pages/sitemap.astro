@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { brand, makes } from '../data/site';
+import { stock, niceTitle } from '../data/stock';
+import { oldCities, cityPath, locals, localPath } from '../data/areas';
+const crumbs = [{ name: 'Sitemap', path: '/sitemap' }];
+const pages = [['About Us', '/about'], ['Contact Us', '/contact'], ['Finance', '/finance'], ['Home', '/'], ['New Trailers', '/new-trailers'], ['Part Exchange', '/part-exchange'], ['Parts', '/parts'], ['Privacy', '/privacy'], ['Reviews', '/reviews'], ['Sell Your Trailer', '/sell-your-trailer'], ['Showroom', '/showroom'], ['Terms', '/terms'], ['Trailer Enquiry', '/enquiry'], ['Trailer Export', '/trailer-export'], ['Used Fridges', '/used-fridges'], ['Used Trailers', '/used-trailers'], ['Areas', '/areas']];
+---
+<Base title={`Sitemap | ${brand.legal}`} desc={`Every page on the ${brand.legal} website.`} crumbs={crumbs}>
+  <PageHero title="Sitemap" crumbs={crumbs} />
+  <section class="sec"><div class="wrap">
+    <h2 class="h-3 hd">Site Pages</h2>
+    <ul class="arealist">{pages.map(([n, p]) => <li><a href={p}>{n}</a></li>)}{makes.map((m) => <li><a href={`/used-trailers/${m.slug}`}>{m.name} Trailers</a></li>)}</ul>
+    <h2 class="h-3 hd">Trailers</h2>
+    <ul class="arealist">{stock.map((t) => <li><a href={t.path}>{niceTitle(t)} ({t.ref})</a></li>)}</ul>
+    <h2 class="h-3 hd">Areas</h2>
+    <ul class="arealist">{oldCities.map((c) => <li><a href={cityPath(c)}>Refrigerated Trucks for Sale in {c}</a></li>)}{locals.map((l) => <li><a href={localPath(l)}>Refrigerated Trailers for Sale in {l.name}</a></li>)}</ul>
+  </div></section>
+</Base>
+<style>.hd { margin: 40px 0 16px; } .hd:first-child { margin-top: 0; }</style>

@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import EnquiryBand from '../components/EnquiryBand.astro';
+import { C } from '../data/site';
+const S = C.sell; const crumbs = [{ name: 'Sell Your Trailer', path: '/sell-your-trailer' }];
+const fix = (s: string) => s.replace('part?exchange', 'part-exchange');
+---
+<Base title={S.title} desc={fix(S.desc)} crumbs={crumbs}>
+  <PageHero title={S.h1} lede={S.strap} img="side-orange" crumbs={crumbs} />
+  <section class="sec">
+    <div class="wrap grid-2">
+      <div class="prose" data-reveal>
+        <h2 class="h-2">{S.tagline}</h2>
+        {S.intro.map((p) => <p class="lede">{p}</p>)}
+      </div>
+      <div class="card" data-reveal="0.08"><h2 class="h-3">{S.h2}</h2><EnquiryForm mode="sell" /></div>
+    </div>
+  </section>
+  <section class="sec sec--ice">
+    <div class="wrap cols-3">
+      <div class="pt" data-reveal><h2 class="h-3">{S.pxH}</h2>{S.px.map((p) => <p>{p}</p>)}</div>
+      <div class="pt" data-reveal="0.05"><h2 class="h-3">{S.leasedH}</h2>{S.leased.map((p) => <p>{p}</p>)}</div>
+      <div class="pt" data-reveal="0.1"><h2 class="h-3">{S.fridgeH}</h2>{S.fridge.map((p) => <p>{p}</p>)}</div>
+    </div>
+  </section>
+  <EnquiryBand title={S.h2} sub={S.cta} package="selling a trailer" />
+</Base>
+<style>.card h2 { margin-bottom: 18px; } .prose .h-2 { max-width: 14ch; }</style>

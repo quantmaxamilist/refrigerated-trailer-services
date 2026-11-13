@@ -1,0 +1,161 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Icon from '../../../components/Icon.astro';
+import TrailerCard from '../../../components/TrailerCard.astro';
+import EnquiryBand from '../../../components/EnquiryBand.astro';
+import { SITE, contact, C, brand } from '../../../data/site';
+import { stock, niceTitle } from '../../../data/stock';
+export function getStaticPaths() { return stock.map((t) => ({ params: { id: t.id, slug: t.slug }, props: { t } })); }
+const { t } = Astro.props;
+const name = niceTitle(t);
+const crumbs = [{ name: 'Showroom', path: '/showroom' }, { name, path: t.path }];
+const title = `${name} ${t.isNew ? 'New' : 'Used'} Refrigerated Trailer for Sale | ${t.ref} | RTS`;
+// description that fits a search result: what it is, as many of its features as fit, the reference and the phone number
+const tail = ` Ref ${t.ref}. Call ${contact.phone}.`;
+let lead = `${/^(brand )?new/i.test(t.summary) || !t.isNew ? '' : 'New '}${t.isNew ? '' : 'Used '}${t.summary} for sale at ${brand.name}.`;
+for (const f of t.features) { if ((lead + ' ' + f + '.' + tail).length > 158) break; lead += ' ' + f + '.'; }
+const desc = lead + tail;
+const wa = `${contact.whatsapp}&text=${encodeURIComponent(`Enquiry regarding ${t.title} (${t.ref}) - ${SITE}${t.path}`)}`;
+const more = [...stock.filter((s) => s.id !== t.id && s.makeSlug === t.makeSlug), ...stock.filter((s) => s.id !== t.id && s.makeSlug !== t.makeSlug)].slice(0, 3);
+const photos = t.photos;
+const schema = [{
+  '@context': 'https://schema.org', '@type': ['Product', 'Vehicle'], name, description: `${t.summary}. ${t.description}`, sku: t.ref, url: SITE + t.path,
+  image: photos.slice(0, 6).map((p) => `${SITE}/stock/${t.id}/${p.f}.webp`), brand: { '@type': 'Brand', name: t.makeName }, model: t.model,
+  vehicleModelDate: t.year, productionDate: t.year, itemCondition: t.isNew ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition', bodyType: 'Refrigerated semi-trailer',
+  offers: { '@type': 'Offer', availability: 'https://schema.org/InStock', priceCurrency: 'GBP', seller: { '@id': SITE + '/#business' }, url: SITE + t.path },
+}];
+---
+<Base title={title} desc={desc} crumbs={crumbs} image={`/stock/${t.id}/${t.card}.webp`} schema={schema} enquire={`/enquiry?trailer=${t.id}`}>
+  <section class="dt">
+    <div class="wrap">
+      <nav class="crumbs mono" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/showroom">Showroom</a><span aria-hidden="true">/</span><span aria-current="page">{name}</span></nav>
+      <div class="top">
+        <div class="gal" data-gal data-id={t.id} data-photos={JSON.stringify(photos.map((p) => p.f))}>
+          <div class="view">
+            <button class="open" type="button" data-open aria-label="Open photo full screen">
+              <img src={`/stock/${t.id}/${photos[0].f}.webp`} width={photos[0].w} height={photos[0].h} alt={`${name}, photo 1 of ${photos.length}`} data-main fetchpriority="high" />
+            </button>
+            {photos.length > 1 && <button class="nv pv" type="button" data-prev aria-label="Previous photo"><Icon name="prev" /></button>}
+            {photos.length > 1 && <button class="nv nx" type="button" data-next aria-label="Next photo"><Icon name="next" /></button>}
+            <span class="pos mono" data-pos>Photo 1 of {photos.length}</span>
+            <span class="exp" aria-hidden="true"><Icon name="expand" size={18} /></span>
+          </div>
+          {photos.length > 1 && (
+            <ul class="thumbs" data-thumbs>
+              {photos.map((p, i) => <li><button type="button" data-thumb={i} aria-label={`Photo ${i + 1}`} aria-current={i === 0 ? 'true' : undefined}><img src={`/stock/${t.id}/${p.f}-s.webp`} width="120" height="90" alt="" loading="lazy" /></button></li>)}
+            </ul>
+          )}
+        </div>
+        <div class="sum">
+          <div class="tags"><span class:list={['flag', { isnew: t.isNew }]}>{t.isNew ? 'New' : 'Used'}</span><span class="plate"><span>{t.ref}</span></span></div>
+          <h1 class="h-3">{name}</h1>
+          <p class="lede">{t.summary}</p>
+          <p class="price">{t.price}</p>
+          <div class="cta">
+            <a class="btn btn--cyan" href={`/enquiry?trailer=${t.id}`}>Enquire Now</a>
+            <a class="btn btn--wa" href={wa} rel="noopener"><Icon name="wa" />Whatsapp</a>
+            <a class="btn" href={contact.phoneHref}><Icon name="phone" />{contact.phone}</a>
+            <a class="btn btn--ghost" href={`/part-exchange?trailer=${t.id}`}>Part exchange</a>
+          </div>
+          <p class="refnote">Reference: <strong>{t.ref}</strong> ({C.shared.refNote})</p>
+          {t.features.length > 0 && <ul class="ticks feats">{t.features.map((f) => <li>{f}</li>)}</ul>}
+          {t.hours && <p class="hrs"><span>Engine Hours</span><strong class="mono">{t.hours}</strong></p>}
+        </div>
+      </div>
+      <div class="specs">
+        {Object.entries(t.specs).map(([g, rows]) => (
+          <div>
+            <h2 class="h-4">{g === 'Details' ? 'Trailer details' : g}</h2>
+            <dl class="spec">{Object.entries(rows).map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  <section class="sec sec--ice">
+    <div class="wrap">
+      <div class="linehead"><h2 class="h-2">Featured Trailers</h2></div>
+      <div class="stock-grid">{more.map((m) => <TrailerCard t={m} />)}</div>
+    </div>
+  </section>
+  <EnquiryBand />
+  <dialog class="lb" data-lb aria-label="Photo viewer">
+    <img src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAACAkQBADs=" alt="" data-lb-img />
+    <button class="x" type="button" data-lb-close aria-label="Close"><Icon name="close" size={26} /></button>
+    <button class="nv pv" type="button" data-lb-prev aria-label="Previous photo"><Icon name="prev" size={28} /></button>
+    <button class="nv nx" type="button" data-lb-next aria-label="Next photo"><Icon name="next" size={28} /></button>
+    <span class="pos mono" data-lb-pos></span>
+  </dialog>
+</Base>
+
+<script>
+  const gal = document.querySelector<HTMLElement>('[data-gal]');
+  if (gal) {
+    const id = gal.dataset.id!; const files: string[] = JSON.parse(gal.dataset.photos!);
+    const main = gal.querySelector<HTMLImageElement>('[data-main]')!; const pos = gal.querySelector<HTMLElement>('[data-pos]')!;
+    const thumbs = Array.from(gal.querySelectorAll<HTMLButtonElement>('[data-thumb]'));
+    const lb = document.querySelector<HTMLDialogElement>('[data-lb]')!; const lbImg = lb.querySelector<HTMLImageElement>('[data-lb-img]')!; const lbPos = lb.querySelector<HTMLElement>('[data-lb-pos]')!;
+    const base = main.alt.replace(/, photo.*$/, '');
+    const src = (i: number) => `/stock/${id}/${files[i]}.webp`;
+    let cur = 0;
+    const show = (i: number, scrollThumb = true) => {
+      cur = (i + files.length) % files.length;
+      main.src = src(cur); main.alt = `${base}, photo ${cur + 1} of ${files.length}`;
+      pos.textContent = `Photo ${cur + 1} of ${files.length}`;
+      thumbs.forEach((t, k) => k === cur ? t.setAttribute('aria-current', 'true') : t.removeAttribute('aria-current'));
+      if (scrollThumb && thumbs[cur]) { const ul = thumbs[cur].closest('ul')!; ul.scrollTo({ left: thumbs[cur].parentElement!.offsetLeft - ul.clientWidth / 2 + 60, behavior: 'smooth' }); }
+      if (lb.open) { lbImg.src = src(cur); lbImg.alt = main.alt; lbPos.textContent = pos.textContent; }
+      const pre = new Image(); pre.src = src((cur + 1) % files.length);
+    };
+    gal.querySelector('[data-prev]')?.addEventListener('click', () => show(cur - 1));
+    gal.querySelector('[data-next]')?.addEventListener('click', () => show(cur + 1));
+    thumbs.forEach((t) => t.addEventListener('click', () => show(+t.dataset.thumb!, false)));
+    gal.querySelector('[data-open]')!.addEventListener('click', () => { lbImg.src = src(cur); lbImg.alt = main.alt; lbPos.textContent = pos.textContent; lb.showModal(); });
+    lb.querySelector('[data-lb-close]')!.addEventListener('click', () => lb.close());
+    lb.querySelector('[data-lb-prev]')!.addEventListener('click', () => show(cur - 1));
+    lb.querySelector('[data-lb-next]')!.addEventListener('click', () => show(cur + 1));
+    lb.addEventListener('click', (e) => { if (e.target === lb) lb.close(); });
+    addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') show(cur - 1); if (e.key === 'ArrowRight') show(cur + 1); });
+  }
+</script>
+
+<style>
+  .dt { padding: 28px 0 var(--sec); }
+  .crumbs { display: flex; flex-wrap: wrap; gap: 8px; color: var(--mute); margin-bottom: 22px; }
+  .crumbs a:hover { color: var(--navy); }
+  .crumbs [aria-current] { color: var(--ink); }
+  .top { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: clamp(24px, 3.4vw, 56px); align-items: start; }
+  .view { position: relative; aspect-ratio: 4 / 3; background: var(--stage); border-radius: var(--r); overflow: hidden; }
+  .open { position: absolute; inset: 0; border: 0; padding: 0; background: none; cursor: zoom-in; }
+  .open img { width: 100%; height: 100%; object-fit: contain; }
+  .nv { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.92); color: var(--ink); display: grid; place-items: center; transition: background-color 0.2s; }
+  .nv:hover { background: var(--cyan); }
+  .pv { left: 12px; } .nx { right: 12px; }
+  .pos { position: absolute; left: 12px; bottom: 12px; background: rgba(9, 14, 43, 0.78); color: #fff; padding: 5px 9px; border-radius: 3px; pointer-events: none; }
+  .exp { position: absolute; right: 12px; bottom: 12px; width: 34px; height: 34px; display: grid; place-items: center; background: rgba(9, 14, 43, 0.78); color: #fff; border-radius: 3px; pointer-events: none; }
+  .thumbs { display: grid; grid-auto-flow: column; grid-auto-columns: 104px; gap: 8px; overflow-x: auto; margin-top: 10px; padding-bottom: 6px; scrollbar-width: thin; }
+  .thumbs button { display: block; width: 100%; aspect-ratio: 4 / 3; padding: 0; border: 0; border-radius: 4px; overflow: hidden; background: var(--ice); opacity: 0.62; transition: opacity 0.2s, box-shadow 0.2s; }
+  .thumbs button:hover { opacity: 1; }
+  .thumbs button[aria-current] { opacity: 1; outline: 3px solid var(--cyan); outline-offset: -3px; }
+  .thumbs img { width: 100%; height: 100%; object-fit: cover; }
+  .sum { display: grid; gap: 16px; position: sticky; top: calc(var(--hdr) + 20px); }
+  .tags { display: flex; align-items: center; gap: 12px; }
+  .flag { background: var(--ice); color: var(--ink); font: italic 800 0.8125rem/1 var(--f-display); padding: 7px 12px 6px; border-radius: 3px; }
+  .flag.isnew { background: var(--cyan); color: var(--stage); }
+  .price { font: 900 2rem/1 var(--f-display); letter-spacing: -0.03em; color: var(--navy); }
+  .cta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .refnote { font-size: var(--fs-small); color: var(--mute); }
+  .refnote strong { font-family: var(--f-mono); color: var(--ink); }
+  .feats { padding-top: 18px; border-top: 1px solid var(--line); gap: 9px; font-size: var(--fs-small); }
+  .hrs { display: flex; justify-content: space-between; padding: 12px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); font-size: var(--fs-small); color: var(--mute); }
+  .hrs strong { color: var(--ink); font-size: 0.9375rem; }
+  .specs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px clamp(28px, 5vw, 88px); margin-top: clamp(40px, 5vw, 72px); padding-top: clamp(32px, 4vw, 56px); border-top: 2px solid var(--ink); }
+  .specs h2 { margin-bottom: 8px; }
+  .lb { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgba(5, 8, 26, 0.96); }
+  .lb::backdrop { background: rgba(5, 8, 26, 0.96); }
+  .lb img { position: absolute; inset: 56px 12px; width: calc(100% - 24px); height: calc(100% - 112px); object-fit: contain; }
+  .lb .x { position: absolute; right: 12px; top: 8px; width: 48px; height: 48px; border: 0; background: none; color: #fff; display: grid; place-items: center; }
+  .lb .pos { left: 50%; transform: translateX(-50%); background: none; }
+  @media (max-width: 980px) { .top { grid-template-columns: minmax(0, 1fr); } .sum { position: static; } }
+  @media (max-width: 640px) { .specs { grid-template-columns: minmax(0, 1fr); } .cta { grid-template-columns: 1fr; } }
+</style>

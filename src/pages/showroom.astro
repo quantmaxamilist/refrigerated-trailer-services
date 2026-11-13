@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import StockList from '../components/StockList.astro';
+import EnquiryBand from '../components/EnquiryBand.astro';
+import { C } from '../data/site';
+import { stock } from '../data/stock';
+const crumbs = [{ name: 'Showroom', path: '/showroom' }];
+---
+<Base title={C.showroom.title} desc={C.showroom.desc} crumbs={crumbs}>
+  <PageHero title="Trailer Showroom" lede={C.home.oneStop[3]} img="aerial-line" crumbs={crumbs} />
+  <section class="sec"><div class="wrap"><StockList items={stock} /></div></section>
+  <EnquiryBand />
+</Base>

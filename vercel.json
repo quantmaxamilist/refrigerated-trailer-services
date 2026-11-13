@@ -1,0 +1,306 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/index",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/detail",
+      "destination": "/showroom",
+      "permanent": true
+    },
+    {
+      "source": "/base-meta",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/cookies",
+      "destination": "/privacy",
+      "permanent": true
+    },
+    {
+      "source": "/refrigerated-trucks-for-sale-bristol",
+      "destination": "/refrigerated-trucks-for-sale-in-bristol",
+      "permanent": true
+    },
+    {
+      "source": "/refrigerated-trucks-for-sale-newcastle",
+      "destination": "/refrigerated-trucks-for-sale-in-newcastle",
+      "permanent": true
+    },
+    {
+      "source": "/refrigerated-trucks-for-sale-leeds",
+      "destination": "/refrigerated-trucks-for-sale-in-leeds",
+      "permanent": true
+    },
+    {
+      "source": "/refrigerated-trucks-for-sale-manchester",
+      "destination": "/refrigerated-trucks-for-sale-in-manchester",
+      "permanent": true
+    },
+    {
+      "source": "/refrigerated-trucks-for-sale-birmingham",
+      "destination": "/refrigerated-trucks-for-sale-in-birmingham",
+      "permanent": true
+    },
+    {
+      "source": "/refrigerated-trucks-for-sale-liverpool",
+      "destination": "/refrigerated-trucks-for-sale-in-liverpool",
+      "permanent": true
+    },
+    {
+      "source": "/refrigerated-trucks-for-sale-sheffield",
+      "destination": "/refrigerated-trucks-for-sale-in-sheffield",
+      "permanent": true
+    },
+    {
+      "source": "/refrigerated-trucks-for-sale-leicester",
+      "destination": "/refrigerated-trucks-for-sale-in-leicester",
+      "permanent": true
+    },
+    {
+      "source": "/refrigerated-trucks-for-sale-york",
+      "destination": "/refrigerated-trucks-for-sale-in-york",
+      "permanent": true
+    },
+    {
+      "source": "/used-trailers/SCHMITZ",
+      "destination": "/used-trailers/schmitz",
+      "permanent": true
+    },
+    {
+      "source": "/used-trailers/CHEREAU",
+      "destination": "/used-trailers/chereau",
+      "permanent": true
+    },
+    {
+      "source": "/used-trailers/KRONE",
+      "destination": "/used-trailers/krone",
+      "permanent": true
+    },
+    {
+      "source": "/used-trailers/MONTRACON",
+      "destination": "/used-trailers/montracon",
+      "permanent": true
+    },
+    {
+      "source": "/used-trailers/LAMBERET",
+      "destination": "/used-trailers/lamberet",
+      "permanent": true
+    },
+    {
+      "source": "/used-trailers/GRAY\\+&\\+ADAMS",
+      "destination": "/used-trailers/gray-and-adams",
+      "permanent": true
+    },
+    {
+      "source": "/used-trailers/GRAY%2B%26%2BADAMS",
+      "destination": "/used-trailers/gray-and-adams",
+      "permanent": true
+    },
+    {
+      "source": "/used-trailers/GRAY\\+%26\\+ADAMS",
+      "destination": "/used-trailers/gray-and-adams",
+      "permanent": true
+    },
+    {
+      "source": "/used-trailers/GRAY%20&%20ADAMS",
+      "destination": "/used-trailers/gray-and-adams",
+      "permanent": true
+    },
+    {
+      "source": "/used-trailers/GRAY%20%26%20ADAMS",
+      "destination": "/used-trailers/gray-and-adams",
+      "permanent": true
+    },
+    {
+      "source": "/used-trailers/GRAY-&-ADAMS",
+      "destination": "/used-trailers/gray-and-adams",
+      "permanent": true
+    },
+    {
+      "source": "/info/1403733/:slug*",
+      "destination": "/detail/1403733/used-lamberet-mono-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/detail/1403732/used-gray-&-adams-mono-temperature-pentrebach",
+      "destination": "/detail/1403732/used-gray-and-adams-mono-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/detail/1403732/used-gray-%26-adams-mono-temperature-pentrebach",
+      "destination": "/detail/1403732/used-gray-and-adams-mono-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1403732/:slug*",
+      "destination": "/detail/1403732/used-gray-and-adams-mono-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1403727/:slug*",
+      "destination": "/detail/1403727/used-chereau-mono-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1403724/:slug*",
+      "destination": "/detail/1403724/used-chereau-multi-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1403722/:slug*",
+      "destination": "/detail/1403722/used-chereau-multi-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1403718/:slug*",
+      "destination": "/detail/1403718/used-chereau-multi-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1403650/:slug*",
+      "destination": "/detail/1403650/used-lamberet-mono-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1403649/:slug*",
+      "destination": "/detail/1403649/used-lamberet-mono-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1403641/:slug*",
+      "destination": "/detail/1403641/used-lamberet-multi-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1403623/:slug*",
+      "destination": "/detail/1403623/used-lamberet-mono-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1389537/:slug*",
+      "destination": "/detail/1389537/used-lamberet-mono-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1389240/:slug*",
+      "destination": "/detail/1389240/used-chereau-multi-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1389037/:slug*",
+      "destination": "/detail/1389037/used-schmitz-mono-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1388914/:slug*",
+      "destination": "/detail/1388914/used-schmitz-mono-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1388897/:slug*",
+      "destination": "/detail/1388897/used-schmitz-mono-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1380083/:slug*",
+      "destination": "/detail/1380083/new-lamberet-mono-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1379026/:slug*",
+      "destination": "/detail/1379026/used-lamberet-multi-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1368457/:slug*",
+      "destination": "/detail/1368457/used-chereau-multi-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1368452/:slug*",
+      "destination": "/detail/1368452/used-chereau-mono-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1368434/:slug*",
+      "destination": "/detail/1368434/new-lamberet-mono-or-multi-temp-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1368411/:slug*",
+      "destination": "/detail/1368411/new-lamberet-mono-or-multi-temp-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1368398/:slug*",
+      "destination": "/detail/1368398/new-lamberet-hd-mono-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1368394/:slug*",
+      "destination": "/detail/1368394/new-lamberet-mono-temperature-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/info/1368381/:slug*",
+      "destination": "/detail/1368381/new-lamberet-hd-multi-carrier-vector-19he-mt-pentrebach",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/:id/:slug*",
+      "destination": "/enquiry?trailer=:id",
+      "permanent": true
+    },
+    {
+      "source": "/part-exchange/:id/:slug*",
+      "destination": "/part-exchange?trailer=:id",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": ".*\\.vercel\\.app"
+        }
+      ],
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
+      "source": "/_astro/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(stock|img|video)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800"
+        }
+      ]
+    }
+  ]
+}
